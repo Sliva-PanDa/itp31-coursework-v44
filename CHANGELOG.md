@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - ER-диаграмма (db/schema/er-diagram-v44.png).
 - Черновик пояснительной записки (docs/draft_report.md).
 - Скрипт схемы БД (db/create-schema.sql).
+- Скрипт тестовых данных (db/seed-data.sql).
 
 ### Changed
 
