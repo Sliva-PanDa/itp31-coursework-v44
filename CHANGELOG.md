@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ### Added
 - Initial project setup: README with variant 44 description, .gitignore, CHANGELOG, folders (db, web-app, docs).
+- Таблицы атрибутов сущностей (docs/attributes.md).
 
 ### Changed
 
