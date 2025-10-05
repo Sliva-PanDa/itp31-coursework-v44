@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - Initial project setup: README with variant 44 description, .gitignore, CHANGELOG, folders (db, web-app, docs).
 - Таблицы атрибутов сущностей (docs/attributes.md).
 - ER-диаграмма (db/schema/er-diagram-v44.png).
+- Черновик пояснительной записки (docs/draft_report.md).
 
 ### Changed
 
