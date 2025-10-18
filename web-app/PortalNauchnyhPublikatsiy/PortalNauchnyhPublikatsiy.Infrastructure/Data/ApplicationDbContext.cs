@@ -14,18 +14,35 @@ namespace PortalNauchnyhPublikatsiy.Infrastructure.Data
         public DbSet<Publication> Publications { get; set; }
         public DbSet<ScientificDirection> ScientificDirections { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
-
         public DbSet<PublicationAuthor> PublicationAuthors { get; set; }
         public DbSet<ProjectParticipant> ProjectParticipants { get; set; }
         public DbSet<PublicationProject> PublicationProjects { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<PublicationAuthor>().HasKey(pa => new { pa.PublicationId, pa.TeacherId });
             modelBuilder.Entity<ProjectParticipant>().HasKey(pp => new { pp.ProjectId, pp.TeacherId });
             modelBuilder.Entity<PublicationProject>().HasKey(pp => new { pp.PublicationId, pp.ProjectId });
 
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Project>()
+                .HasOne(p => p.Leader)
+                .WithMany() 
+                .HasForeignKey(p => p.LeaderId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            modelBuilder.Entity<ProjectParticipant>()
+                .HasOne(pp => pp.Teacher)
+                .WithMany()
+                .HasForeignKey(pp => pp.TeacherId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            modelBuilder.Entity<ProjectParticipant>()
+                .HasOne(pp => pp.Project)
+                .WithMany()
+                .HasForeignKey(pp => pp.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade); 
         }
     }
 }

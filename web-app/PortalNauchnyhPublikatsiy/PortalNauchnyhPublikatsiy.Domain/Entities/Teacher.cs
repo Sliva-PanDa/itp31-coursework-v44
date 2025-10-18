@@ -9,10 +9,10 @@ namespace PortalNauchnyhPublikatsiy.Domain.Entities
     public class Teacher
     {
         public int Id { get; set; }
-        public string FullName { get; set; }
-        public string Position { get; set; }
-        public string Degree { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string Position { get; set; } = string.Empty; 
+        public string Degree { get; set; } = string.Empty;
         public int DepartmentId { get; set; }
-        public Department Department { get; set; }
+        public Department Department { get; set; } = null!;
     }
 }
