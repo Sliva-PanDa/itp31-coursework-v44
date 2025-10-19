@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PortalNauchnyhPublikatsiy.Infrastructure.Data;
+using PortalNauchnyhPublikatsiy.Application.Interfaces;
+using PortalNauchnyhPublikatsiy.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddScoped<IPublicationRepository, PublicationRepository>();
+builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
