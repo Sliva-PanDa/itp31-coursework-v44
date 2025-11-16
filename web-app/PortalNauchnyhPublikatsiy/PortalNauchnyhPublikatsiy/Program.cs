@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using PortalNauchnyhPublikatsiy.Infrastructure.Data;
+using PortalNauchnyhPublikatsiy.Application.Interfaces;
+using PortalNauchnyhPublikatsiy.Infrastructure.Repositories;
+using PortalNauchnyhPublikatsiy.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +13,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddScoped<IPublicationRepository, PublicationRepository>();
+builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
+builder.Services.AddScoped<IPublicationService, PublicationService>();
+builder.Services.AddScoped<IJournalConferenceRepository, JournalConferenceRepository>();
+builder.Services.AddScoped<IJournalConferenceService, JournalConferenceService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
