@@ -40,5 +40,22 @@ namespace PortalNauchnyhPublikatsiy.Web.Controllers
 
             return View(publicationDto);
         }
+        // GET: Publications/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound(); // Если id не передан, возвращаем ошибку 404
+            }
+
+            var publicationDto = await _publicationService.GetPublicationByIdAsync(id.Value);
+
+            if (publicationDto == null)
+            {
+                return NotFound(); // Если публикация с таким id не найдена, возвращаем 404
+            }
+
+            return View(publicationDto);
+        }
     }
 }
