@@ -12,5 +12,6 @@ namespace PortalNauchnyhPublikatsiy.Application.Services
         Task<IEnumerable<PublicationDto>> GetAllPublicationsAsync();
         Task<PublicationDto?> GetPublicationByIdAsync(int id);
         Task CreatePublicationAsync(CreatePublicationDto publicationDto);
+        Task UpdatePublicationAsync(UpdatePublicationDto publicationDto);
     }
 }

@@ -57,5 +57,52 @@ namespace PortalNauchnyhPublikatsiy.Web.Controllers
 
             return View(publicationDto);
         }
+        // GET: Publications/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var publicationDto = await _publicationService.GetPublicationByIdAsync(id.Value);
+            if (publicationDto == null)
+            {
+                return NotFound();
+            }
+
+            // Преобразуем PublicationDto в UpdatePublicationDto для передачи в форму
+            var updateDto = new PortalNauchnyhPublikatsiy.Application.DTO.UpdatePublicationDto
+            {
+                Id = publicationDto.Id,
+                Title = publicationDto.Title,
+                Type = publicationDto.Type,
+                Year = publicationDto.Year,
+                // JournalConferenceId нужно будет получить отдельно или добавить в PublicationDto
+                // Пока что оставим 0, позже улучшим
+                JournalConferenceId = 0,
+                DOI = publicationDto.DOI
+            };
+
+            return View(updateDto);
+        }
+
+        // POST: Publications/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, UpdatePublicationDto publicationDto)
+        {
+            if (id != publicationDto.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _publicationService.UpdatePublicationAsync(publicationDto);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(publicationDto);
+        }
     }
 }

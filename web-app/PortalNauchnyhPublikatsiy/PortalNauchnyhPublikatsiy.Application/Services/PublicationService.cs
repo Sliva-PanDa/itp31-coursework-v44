@@ -66,5 +66,22 @@ namespace PortalNauchnyhPublikatsiy.Application.Services
 
             await _publicationRepository.AddAsync(publication);
         }
+        public async Task UpdatePublicationAsync(UpdatePublicationDto publicationDto)
+        {
+            // Сначала нужно найти существующую сущность в базе данных
+            var publication = await _publicationRepository.GetByIdAsync(publicationDto.Id);
+
+            if (publication != null)
+            {
+                publication.Title = publicationDto.Title;
+                publication.Type = publicationDto.Type;
+                publication.Year = publicationDto.Year;
+                publication.JournalConferenceId = publicationDto.JournalConferenceId;
+                publication.DOI = publicationDto.DOI;
+                publication.FilePath = publicationDto.FilePath;
+
+                await _publicationRepository.UpdateAsync(publication);
+            }
+        }
     }
 }
