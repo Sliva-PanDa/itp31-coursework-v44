@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using PortalNauchnyhPublikatsiy.Application.DTO;
 using PortalNauchnyhPublikatsiy.Application.Services;
 
@@ -7,127 +8,110 @@ namespace PortalNauchnyhPublikatsiy.Web.Controllers
     public class PublicationsController : Controller
     {
         private readonly IPublicationService _publicationService;
+        private readonly IJournalConferenceService _journalService;
 
-        public PublicationsController(IPublicationService publicationService)
+        public PublicationsController(IPublicationService publicationService, IJournalConferenceService journalService)
         {
             _publicationService = publicationService;
+            _journalService = journalService;
         }
 
-        // Этот метод будет вызываться, когда пользователь перейдет по адресу /Publications/Index
         public async Task<IActionResult> Index()
         {
-            // 1. Обращаемся к сервису за списком всех публикаций (в виде DTO)
             var publications = await _publicationService.GetAllPublicationsAsync();
-
             return View(publications);
         }
-        // GET: Publications/Create
-        public IActionResult Create()
+
+        public async Task<IActionResult> Details(int? id)
         {
+            if (id == null) return NotFound();
+            var publicationDto = await _publicationService.GetPublicationByIdAsync(id.Value);
+            if (publicationDto == null) return NotFound();
+            return View(publicationDto);
+        }
+
+        // GET: Create
+        public async Task<IActionResult> Create()
+        {
+            await PopulateJournalsDropDownList();
             return View();
         }
 
-        // POST: Publications/Create
+        // POST: Create
         [HttpPost]
-        [ValidateAntiForgeryToken] // Защита от CSRF-атак
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreatePublicationDto publicationDto)
         {
-            if (ModelState.IsValid) // Проверяем, прошли ли данные валидацию
+            if (ModelState.IsValid)
             {
                 await _publicationService.CreatePublicationAsync(publicationDto);
-                return RedirectToAction(nameof(Index)); 
+                return RedirectToAction(nameof(Index));
             }
-
+            await PopulateJournalsDropDownList(publicationDto.JournalConferenceId);
             return View(publicationDto);
         }
-        // GET: Publications/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound(); // Если id не передан, возвращаем ошибку 404
-            }
 
-            var publicationDto = await _publicationService.GetPublicationByIdAsync(id.Value);
-
-            if (publicationDto == null)
-            {
-                return NotFound(); // Если публикация с таким id не найдена, возвращаем 404
-            }
-
-            return View(publicationDto);
-        }
-        // GET: Publications/Edit/5
+        // GET: Edit
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+            var publication = await _publicationService.GetPublicationByIdAsync(id.Value);
+            if (publication == null) return NotFound();
 
-            var publicationDto = await _publicationService.GetPublicationByIdAsync(id.Value);
-            if (publicationDto == null)
+            var updateDto = new UpdatePublicationDto
             {
-                return NotFound();
-            }
-
-            // Преобразуем PublicationDto в UpdatePublicationDto для передачи в форму
-            var updateDto = new PortalNauchnyhPublikatsiy.Application.DTO.UpdatePublicationDto
-            {
-                Id = publicationDto.Id,
-                Title = publicationDto.Title,
-                Type = publicationDto.Type,
-                Year = publicationDto.Year,
-                // JournalConferenceId нужно будет получить отдельно или добавить в PublicationDto
-                // Пока что оставим 0, позже улучшим
-                JournalConferenceId = 0,
-                DOI = publicationDto.DOI
+                Id = publication.Id,
+                Title = publication.Title,
+                Type = publication.Type,
+                Year = publication.Year,
+                JournalConferenceId = publication.JournalConferenceId,
+                DOI = publication.DOI,
+                FilePath = "" // FilePath мы пока не храним в DTO, можно оставить пустым
             };
 
+            await PopulateJournalsDropDownList(publication.JournalConferenceId);
             return View(updateDto);
         }
 
-        // POST: Publications/Edit/5
+        // POST: Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, UpdatePublicationDto publicationDto)
         {
-            if (id != publicationDto.Id)
-            {
-                return NotFound();
-            }
+            if (id != publicationDto.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
                 await _publicationService.UpdatePublicationAsync(publicationDto);
                 return RedirectToAction(nameof(Index));
             }
+            await PopulateJournalsDropDownList(publicationDto.JournalConferenceId);
             return View(publicationDto);
         }
-        // GET: Publications/Delete/5
+
+        // GET: Delete
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound();
             var publicationDto = await _publicationService.GetPublicationByIdAsync(id.Value);
-            if (publicationDto == null)
-            {
-                return NotFound();
-            }
-
+            if (publicationDto == null) return NotFound();
             return View(publicationDto);
         }
 
-        // POST: Publications/Delete/5
-        [HttpPost, ActionName("Delete")] // ActionName("Delete") позволяет методу называться DeleteConfirmed, но отвечать на POST /Delete/5
+        // POST: Delete
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _publicationService.DeletePublicationAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+
+        private async Task PopulateJournalsDropDownList(object? selectedJournal = null)
+        {
+            var journals = await _journalService.GetAllAsync();
+            ViewBag.JournalConferenceId = new SelectList(journals, "Id", "Name", selectedJournal);
         }
     }
 }

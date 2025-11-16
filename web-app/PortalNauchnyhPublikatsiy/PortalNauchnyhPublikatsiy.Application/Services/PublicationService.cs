@@ -34,6 +34,7 @@ namespace PortalNauchnyhPublikatsiy.Application.Services
                 Type = publication.Type,
                 Year = publication.Year,
                 JournalName = publication.JournalConference?.Name, // Безопасно получаем имя
+                JournalConferenceId = publication.JournalConferenceId,
                 DOI = publication.DOI
             };
         }
@@ -49,6 +50,7 @@ namespace PortalNauchnyhPublikatsiy.Application.Services
                 Type = publication.Type,
                 Year = publication.Year,
                 JournalName = publication.JournalConference?.Name,
+                JournalConferenceId = publication.JournalConferenceId,
                 DOI = publication.DOI
             });
         }

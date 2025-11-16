@@ -30,10 +30,11 @@
             </div>
 
             <div class="form-group mb-3">
-                <label asp-for="JournalConferenceId" class="control-label">ID Журнала</label>
-                <input asp-for="JournalConferenceId" class="form-control" />
+                <label asp-for="JournalConferenceId" class="control-label">Журнал / Конференция</label>
+                <select asp-for="JournalConferenceId" class="form-control" asp-items="ViewBag.JournalConferenceId">
+                    <option value="">-- Выберите журнал --</option>
+                </select>
                 <span asp-validation-for="JournalConferenceId" class="text-danger"></span>
-                <!-- Позже мы заменю это на выпадающий список, бля если забуду-->
             </div>
 
             <div class="form-group mb-3">

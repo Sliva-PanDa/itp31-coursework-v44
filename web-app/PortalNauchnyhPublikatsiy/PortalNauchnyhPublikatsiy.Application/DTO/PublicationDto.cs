@@ -14,5 +14,6 @@ namespace PortalNauchnyhPublikatsiy.Application.DTO
         public int Year { get; set; }
         public string? JournalName { get; set; } // Название журнала, а не его Id
         public string? DOI { get; set; }
+        public int JournalConferenceId { get; set; }
     }
 }

@@ -16,6 +16,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IPublicationRepository, PublicationRepository>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 builder.Services.AddScoped<IPublicationService, PublicationService>();
+builder.Services.AddScoped<IJournalConferenceRepository, JournalConferenceRepository>();
+builder.Services.AddScoped<IJournalConferenceService, JournalConferenceService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
