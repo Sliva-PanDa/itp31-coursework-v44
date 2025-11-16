@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PortalNauchnyhPublikatsiy.Application.DTO;
 using PortalNauchnyhPublikatsiy.Application.Services;
 
 namespace PortalNauchnyhPublikatsiy.Web.Controllers
@@ -19,6 +20,25 @@ namespace PortalNauchnyhPublikatsiy.Web.Controllers
             var publications = await _publicationService.GetAllPublicationsAsync();
 
             return View(publications);
+        }
+        // GET: Publications/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Publications/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken] // Защита от CSRF-атак
+        public async Task<IActionResult> Create(CreatePublicationDto publicationDto)
+        {
+            if (ModelState.IsValid) // Проверяем, прошли ли данные валидацию
+            {
+                await _publicationService.CreatePublicationAsync(publicationDto);
+                return RedirectToAction(nameof(Index)); 
+            }
+
+            return View(publicationDto);
         }
     }
 }

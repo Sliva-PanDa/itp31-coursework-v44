@@ -52,5 +52,19 @@ namespace PortalNauchnyhPublikatsiy.Application.Services
                 DOI = publication.DOI
             });
         }
+        public async Task CreatePublicationAsync(CreatePublicationDto publicationDto)
+        {
+            var publication = new Domain.Entities.Publication
+            {
+                Title = publicationDto.Title,
+                Type = publicationDto.Type,
+                Year = publicationDto.Year,
+                JournalConferenceId = publicationDto.JournalConferenceId,
+                DOI = publicationDto.DOI,
+                FilePath = publicationDto.FilePath
+            };
+
+            await _publicationRepository.AddAsync(publication);
+        }
     }
 }
