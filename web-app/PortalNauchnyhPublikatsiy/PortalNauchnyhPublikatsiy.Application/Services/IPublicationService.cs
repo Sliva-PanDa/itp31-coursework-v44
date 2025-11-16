@@ -13,5 +13,6 @@ namespace PortalNauchnyhPublikatsiy.Application.Services
         Task<PublicationDto?> GetPublicationByIdAsync(int id);
         Task CreatePublicationAsync(CreatePublicationDto publicationDto);
         Task UpdatePublicationAsync(UpdatePublicationDto publicationDto);
+        Task DeletePublicationAsync(int id);
     }
 }

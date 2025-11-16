@@ -104,5 +104,30 @@ namespace PortalNauchnyhPublikatsiy.Web.Controllers
             }
             return View(publicationDto);
         }
+        // GET: Publications/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var publicationDto = await _publicationService.GetPublicationByIdAsync(id.Value);
+            if (publicationDto == null)
+            {
+                return NotFound();
+            }
+
+            return View(publicationDto);
+        }
+
+        // POST: Publications/Delete/5
+        [HttpPost, ActionName("Delete")] // ActionName("Delete") позволяет методу называться DeleteConfirmed, но отвечать на POST /Delete/5
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await _publicationService.DeletePublicationAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

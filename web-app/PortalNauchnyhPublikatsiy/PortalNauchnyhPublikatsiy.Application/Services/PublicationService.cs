@@ -83,5 +83,9 @@ namespace PortalNauchnyhPublikatsiy.Application.Services
                 await _publicationRepository.UpdateAsync(publication);
             }
         }
+        public async Task DeletePublicationAsync(int id)
+        {
+            await _publicationRepository.DeleteAsync(id);
+        }
     }
 }
